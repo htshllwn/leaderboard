@@ -1,0 +1,19 @@
+{
+  "name": "leaderboard",
+  "version": "1.0.0",
+  "description": "A LeaderBoard web app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/htshllwn/leaderboard.git"
+  },
+  "author": "Hitesh Lalwani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/htshllwn/leaderboard/issues"
+  },
+  "homepage": "https://github.com/htshllwn/leaderboard#readme"
+}
