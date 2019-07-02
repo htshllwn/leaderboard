@@ -1,4 +1,6 @@
-const Player = require('../models/Player');
+const mongoose = require('mongoose');
+const Player = mongoose.model('player');
+const Score = mongoose.model('score');
 const playerController = {};
 
 // Handle index actions
@@ -79,6 +81,41 @@ playerController.update = function (req, res) {
         });
     });
 };
+
+// Handle players' score info
+playerController.scores = function (req, res) {
+    Player.find(async (err, players) => {
+        if (err) {
+            res.json({
+                success: false,
+                message: "Players could not be retrieved",
+                error: err
+            });
+        }
+        else {
+            let playersWithScores = [];
+            console.log("Players:", players);
+            for (let i = 0; i < players.length; i++) {
+                const player = players[i];
+                let score = 0;
+                let scores = await Score.find({ player: player._id })
+                    .populate('medal')
+                    .exec();
+                console.log("score:", scores);
+                scores.forEach(s => score += (s.score + (s.score * s.medal.multiplier)));
+                player.score = score;
+                playersWithScores.push(player);
+            }
+            console.log("playersWithScores:", playersWithScores);
+            res.json({
+                success: true,
+                message: "Players with scores retrieved successfully!",
+                data: playersWithScores
+            });
+        }
+
+    });
+}
 
 // Handle delete player
 // playerController.delete = function (req, res) {

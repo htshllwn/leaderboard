@@ -17,6 +17,9 @@ router.route('/player')
     .get(player.index)
     .post(player.new);
 
+router.route('/player/score')
+    .get(player.scores);
+
 router.route('/player/:player_id')
     .get(player.view)
     .put(player.update);
@@ -55,6 +58,11 @@ const score = require('./controllers/score');
 router.route('/score')
     .get(score.index)
     .post(score.new);
+
+router.route('/score/:score_id')
+    .get(score.view)
+    .put(score.update)
+    .delete(score.delete);
 
 // Export API routes
 module.exports = router;

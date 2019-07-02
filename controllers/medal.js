@@ -1,4 +1,5 @@
-const Medal = require('../models/medal');
+const mongoose = require('mongoose');
+const Medal = mongoose.model('medal');
 const medalController = {};
 
 // Handle index actions

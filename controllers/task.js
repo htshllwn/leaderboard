@@ -1,4 +1,5 @@
-const Task = require('../models/task');
+const mongoose = require('mongoose');
+const Task = mongoose.model('task');
 const taskController = {};
 
 // Handle index actions

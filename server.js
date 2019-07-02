@@ -29,6 +29,9 @@ db.once('open', function() {
     console.log("Connected to MongoDB");
 });
 
+// Mongoose Models
+require('./models/index');
+
 // API Routes.
 const apiRoutes = require('./api-routes');
 app.use('/api', apiRoutes);
