@@ -22,7 +22,8 @@ const scoreSchema = mongoose.Schema({
     },
     medal: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'medal'
+        ref: 'medal',
+        required: true
     },
     comments: {
         type: String,

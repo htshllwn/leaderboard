@@ -84,7 +84,17 @@ playerController.update = function (req, res) {
 
 // Handle players' score info
 playerController.scores = function (req, res) {
-    Player.find(async (err, players) => {
+    let start_date = req.body.start_date
+        ? new Date(req.body.start_date + " 00:00")
+        : new Date("7.1.2018 00:00");
+    let end_date = req.body.end_date
+        ? new Date(req.body.end_date + " 23:59")
+        : new Date();
+    let playerFindOptions = {};
+    if (req.body.player_id != "" && req.body.player_id != null && req.body.player_id != undefined) {
+        playerFindOptions._id = req.body.player_id;
+    }
+    Player.find(playerFindOptions).exec(async (err, players) => {
         if (err) {
             res.json({
                 success: false,
@@ -94,19 +104,23 @@ playerController.scores = function (req, res) {
         }
         else {
             let playersWithScores = [];
-            console.log("Players:", players);
             for (let i = 0; i < players.length; i++) {
                 const player = players[i];
                 let score = 0;
-                let scores = await Score.find({ player: player._id })
+                let scores = await Score.find({
+                    player: player._id,
+                    date: {
+                        $gte: start_date,
+                        $lte: end_date
+                    }
+                })
                     .populate('medal')
                     .exec();
-                console.log("score:", scores);
-                scores.forEach(s => score += (s.score + (s.score * s.medal.multiplier)));
-                player.score = score;
+                scores.forEach(s => score += (s.score * s.medal.multiplier));
+                player._doc.score = score;
                 playersWithScores.push(player);
             }
-            console.log("playersWithScores:", playersWithScores);
+            playersWithScores = playersWithScores.sort((a, b) => b.score - a.score);
             res.json({
                 success: true,
                 message: "Players with scores retrieved successfully!",

@@ -4,7 +4,21 @@ const scoreController = {};
 
 // Handle index actions
 scoreController.index = function (req, res) {
-    Score.find()
+    let start_date = req.body.start_date
+        ? new Date(req.body.start_date + " 00:00")
+        : new Date("7.1.2018 00:00");
+    let end_date = req.body.end_date
+        ? new Date(req.body.end_date + " 23:59")
+        : new Date();
+    let scoreFindOptions = {};
+    scoreFindOptions.date = {
+        $gte: start_date,
+        $lte: end_date
+    };
+    if (req.body.player_id != "" && req.body.player_id != null && req.body.player_id != undefined) {
+        scoreFindOptions.player = req.body.player_id;
+    }
+    Score.find(scoreFindOptions)
         .populate('player')
         .populate('task')
         .populate('medal')
@@ -28,6 +42,14 @@ scoreController.index = function (req, res) {
 // Handle create score actions
 scoreController.new = function (req, res) {
     let score = new Score();
+    let date = req.body.date ? new Date(req.body.date) : score.date;
+    if (date == "Invalid Date") {
+        return res.json({
+            success: false,
+            message: "Invalid Date"
+        });
+    }
+    score.date = date;
     score.player = req.body.player_id ? req.body.player_id : score.player;
     score.task = req.body.task_id ? req.body.task_id : score.task;
     score.score = req.body.score ? req.body.score : score.score;
@@ -76,6 +98,15 @@ scoreController.update = function (req, res) {
             message: "Score details not found for the requested id",
             error: err
         });
+
+        let date = req.body.date ? new Date(req.body.date) : score.date;
+        if (date == "Invalid Date") {
+            return res.json({
+                success: false,
+                message: "Invalid Date"
+            });
+        }
+        score.date = date;
 
         score.player = req.body.player_id ? req.body.player_id : score.player;
         score.task = req.body.task_id ? req.body.task_id : score.task;
