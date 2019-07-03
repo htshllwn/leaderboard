@@ -7,10 +7,16 @@ const bodyParser = require('body-parser');
 // Import Mongoose
 const mongoose = require('mongoose');
 
+// Import cors
+const cors = require('cors');
+
 const app = express();
 
 // Port.
 const port = process.env.PORT || 3000;
+
+// Enable cors
+app.use(cors());
 
 // Configure bodyparser to handle post requests
 app.use(bodyParser.urlencoded({
