@@ -10,7 +10,13 @@ const mongoose = require('mongoose');
 // Import cors
 const cors = require('cors');
 
+// Import morgan
+const morgan = require('morgan');
+
 const app = express();
+
+// use morgan to log requests to the console
+app.use(morgan('dev'));
 
 // Port.
 const port = process.env.PORT || 3000;
