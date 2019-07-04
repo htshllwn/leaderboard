@@ -10,13 +10,17 @@ import { Player } from '../models/player.model';
 })
 export class PlayerService {
   apiBase = environment.apiBase;
-  
+
   constructor(
     private http: HttpClient
   ) { }
 
   fetchAllPlayers(): Observable<BackendReponse<Player[]>> {
     return this.http.get<BackendReponse<Player[]>>(this.apiBase + '/api/player');
+  }
+
+  fetchPlayersScore(): Observable<BackendReponse<Player[]>> {
+    return this.http.get<BackendReponse<Player[]>>(this.apiBase + '/api/player/score');
   }
 
 }
