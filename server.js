@@ -4,14 +4,32 @@ const express = require('express');
 // Import Body parser
 const bodyParser = require('body-parser');
 
-// Import Mongoose
-const mongoose = require('mongoose');
-
 // Import cors
 const cors = require('cors');
 
 // Import morgan
 const morgan = require('morgan');
+
+// Import passport
+const passport = require('passport');
+
+
+// Import Mongoose
+const mongoose = require('mongoose');
+
+// Mongoose Connection
+const mongoDB = require('./helpers/mongoose/mongoose-connection');
+mongoose.connect(mongoDB.connectionURI, {
+    useNewUrlParser: true
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    console.log("Connected to MongoDB");
+});
+
+// Mongoose Models
+require('./models/index');
 
 const app = express();
 
@@ -30,19 +48,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Mongoose Connection
-const mongoDB = require('./helpers/mongoose/mongoose-connection');
-mongoose.connect(mongoDB.connectionURI, {
-    useNewUrlParser: true
-});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-    console.log("Connected to MongoDB");
-});
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Mongoose Models
-require('./models/index');
+require('./helpers/passport')(passport);
 
 // API Routes.
 const apiRoutes = require('./api-routes');

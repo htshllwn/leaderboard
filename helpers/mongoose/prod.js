@@ -1,5 +1,6 @@
 const mongoDB = {
-    connectionURI: process.env.MONGO_DB_URI
+    connectionURI: process.env.MONGO_DB_URI,
+    secret: process.env.APP_SECRET
 }
 
 module.exports = mongoDB;
